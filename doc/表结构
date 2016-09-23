@@ -26,4 +26,8 @@ character_skills
 character_teleport          
 character_vip_time     
           
-pets                        
+pets   
+
+
+mysql -h 192.168.43.155 -u zxczxc -p'zxc123456' --default-character-set=utf8 
+                     
