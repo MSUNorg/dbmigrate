@@ -1,0 +1,29 @@
+账户表  主键 用户名
+accounts  
+个人设置表  主键 用户名
+profile  
+
+角色表  主键 用户名
+characters
+character_config  主键 characters的object_id
+
+character_elf_warehouse     主键 用户名
+
+character_warehouse     主键 用户名     
+
+物品表
+character_items    主键 物品id
+
+character_itemupdate      主键 物品id  
+character_lottery_warehouse 
+character_maptime           
+character_passivespells     
+character_quests            
+character_shop_consumption  
+character_shop_restrict  主键 用户名        
+character_shop_warehouse    
+character_skills            
+character_teleport          
+character_vip_time     
+          
+pets                        
