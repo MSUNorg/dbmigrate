@@ -4,7 +4,7 @@ select * from profile where login='miaonina';
 select * from characters where account_name='miaonina';
 select * from character_elf_warehouse where account_name='miaonina';
 select * from character_shop_restrict where account_name='miaonina';
-select * from character_vip_time where account_name='miaonina';
+select * from character_vip_time where account='miaonina';
 select * from character_warehouse where account_name='miaonina';
 select * from character_shop_consumption where account_name='miaonina';
 

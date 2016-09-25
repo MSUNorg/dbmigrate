@@ -15,10 +15,10 @@ import org.springframework.http.HttpStatus;
  * @author zxc Aug 28, 2015 11:46:11 AM
  */
 @SpringBootApplication
-public class DbmigrateApplication {
+public class DbmigrateLauncher {
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(DbmigrateApplication.class, args);
+        SpringApplication.run(DbmigrateLauncher.class, args);
     }
 
     @Bean
