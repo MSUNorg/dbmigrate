@@ -8,18 +8,16 @@ select * from character_vip_time where account='miaonina';
 select * from character_warehouse where account_name='miaonina';
 select * from character_shop_consumption where account_name='miaonina';
 
-
-
 #characters objid
-select * from characters_config where object_id=?;
+select * from character_config where object_id=?;
 select * from character_items where char_id=?;
 select * from character_maptime where char_id=?;
-select * from character_passivespells where char_id=?;
+select * from character_passivespells where char_obj_id=?;
 select * from character_quests where char_id=?;
 select * from character_skills where char_obj_id=?;
 select * from character_teleport where char_id=?;
 select * from pets where item_obj_id=?;
-
+select * from character_shop_warehouse where char_id=?;
 
 #character_items id
 select * from character_itemupdate where item_id=?;
