@@ -3,7 +3,7 @@
 	  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
 	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-<title>用户数据迁移系统</title>
+<title>添加数据库连接配置-用户数据迁移系统</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
@@ -80,30 +80,30 @@ body {
 					<div class="panel-main panel-gray">
 						<div class="form pd10">
 							<form id="inputForm" action="#" method="post" accept-charset="utf-8">
-								<input type="hidden" name="id" value="${dataField.id}" />
+								<input type="hidden" name="id" th:value="${dbMeta.id}" />
 								<table border="0" cellspacing="0" cellpadding="0" width="100%">
 									<tr>
 										<td width="20%" align="right">数据库地址:</td>
 										<td width="80%" align="left">
-											<input type="text" id="code" name="code" value="${dataField.code}" class="input"
+											<input type="text" id="dbAddr" name="dbAddr" th:value="${dbMeta.dbAddr}" class="input"
 											required="required" maxlength="63" /> <span id="pNo">（格式是:192.168.180.155）</span></td>
 									</tr>
 									<tr>
 										<td width="20%" align="right">数据库名称:</td>
-										<td width="80%" align="left"><input type="text" id="name"
-											name="name" value="${dataField.name}" class="input"
+										<td width="80%" align="left">
+											<input type="text" id="dbName" name="dbName" th:value="${dbMeta.dbName}" class="input"
 											maxlength="63" /></td>
 									</tr>
 									<tr>
 										<td width="20%" align="right">数据库登录名:</td>
-										<td width="80%" align="left"><input type="text" id="length"
-											name="length" value="${dataField.length}" class="input"
+										<td width="80%" align="left">
+											<input type="text" id="name" name="name" th:value="${dbMeta.name}" class="input"
 											required="required" maxlength="8" /></td>
 									</tr>
 									<tr>
 										<td width="20%" align="right">数据库登录密码:</td>
-										<td width="80%" align="left"><input type="text" id="length"
-											name="length" value="${dataField.length}" class="input"
+										<td width="80%" align="left">
+											<input type="text" id="passwd" name="passwd" th:value="${dbMeta.passwd}" class="input"
 											required="required" maxlength="8" /></td>
 									</tr>
 									<tr>
@@ -122,6 +122,53 @@ body {
 
 		</div>
 	</div>
+	
+	<script>
+	    $(function () {
+		    $(".save-btn").click(function() {
+		    	var dbAddr = $('#dbAddr').val();
+		    	var dbName = $('#dbName').val();
+		    	var name = $('#name').val();
+		    	var passwd = $('#passwd').val();
+		    	if(dbAddr == null || dbAddr == ""){
+		    		alert("数据库地址不能为空");
+		    		return;
+		    	}
+		    	if(dbName == null || dbName == ""){
+		    		alert("数据库名称不能为空");
+		    		return;
+		    	}
+		    	if(name == null || name == ""){
+		    		alert("数据库登陆账号不能为空");
+		    		return;
+		    	}
+		    	if(passwd == null || passwd == ""){
+		    		alert("数据库登陆密码不能为空");
+		    		return;
+		    	}
+				$.ajax({
+		   			url: "/setting",
+		   			type: "POST",
+		   			cache: false,
+		   			dataType: "json",
+		   			data: $('#inputForm').serialize(),
+		   			success: function(data) {
+		   				if(!data.status){
+		   					alert(data.message);
+		   					return;
+		   				}
+		   				if(data.status){
+		   					alert(data.message);
+		   					window.location.href = "/setting";
+		   				}
+		   			},
+		   			error: function(XMLHttpRequest, textStatus, errorThrown) {
+	                    alert("服务器错误码:"+XMLHttpRequest.status);
+	                }
+		   		});
+			});
+	    })
+	</script>
 
 	<div class="layout_footer">© 2016 用户数据迁移系统.</div>
 </body>

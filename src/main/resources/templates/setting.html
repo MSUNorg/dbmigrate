@@ -80,7 +80,7 @@ body {
 			<div class="pd10 left">
 				<form id="searchForm" action="user" method="post">
 				 <div class="page-search">
-					<a href="/setting/add" class="btn btn-primary">添加</a>
+					<a href="/setting/edit/0" class="btn btn-primary">添加</a>
 				 </div>
 				 </form>
 				<div class="page-operate mt10">
@@ -89,23 +89,24 @@ body {
 					<div class="list-table">
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
-								<th width="60">唯一id</th>
-								<th width="60">数据库地址</th>
-								<th width="100">数据库名称</th>
-								<th width="200">数据库登录名</th>
-								<th width="100">数据库密码</th>
-								<th width="60">创建时间</th>
+								<th width="10%">唯一id</th>
+								<th width="15%">数据库地址</th>
+								<th width="10%">数据库名称</th>
+								<th width="10%">数据库登录名</th>
+								<th width="10%">数据库密码</th>
+								<th width="10%">创建时间</th>
 								<th>操作</th>
 							</tr>
-							<tr>
-								<td>${dataField.code}</td>
-								<td>${dataField.name}</td>
-								<td>${dataField.type}</td>
-								<td>${dataField.length}</td>
-								<td>${dataField.widget}</td>
+							<tr th:each="data : ${list}">
+								<td th:inline="text">[[${data.id}]]</td>
+								<td th:inline="text">[[${data.dbAddr}]]</td>
+								<td th:inline="text">[[${data.dbName}]]</td>
+								<td th:inline="text">[[${data.name}]]</td>
+								<td th:inline="text">[[${data.passwd}]]</td>
+								<td th:inline="text">[[${#dates.format(data.createAt, 'yyyy-MM-dd')}]]</td>
 								<td class="i-operate">
-									<a href="${ctx}/dataField/edit/${dataField.id}">编辑 </a>&nbsp;&nbsp;
-									<a href="#" onclick="del(${dataField.id})">删除 </a>
+									<a th:href="@{'/setting/edit/'+${data.id}}" href="/setting/edit/0">编辑 </a>&nbsp;&nbsp;
+									<a href="#" th:onclick="|del('${data.id}')|">删除 </a>
 								</td>
 							</tr>
 			            </table>
@@ -115,7 +116,30 @@ body {
 			
 		</div>
 	</div>
-
+	<script> 
+		function del(id) {
+	    	if(!id || !confirm("确定要删除吗?")) return;
+			$.ajax({
+	   			url: "/setting/del/"+id,
+	   			type: "POST",
+	   			cache: false,
+	   			dataType: "json",
+	   			success: function(data) {
+	   				if(!data.status){
+	   					alert(data.message);
+	   					return;
+	   				}
+	   				if(data.status){
+	   					alert(data.message);
+	   					window.location.href = "/setting";
+	   				}
+	   			},
+	   			error: function(XMLHttpRequest, textStatus, errorThrown) {
+	                alert("服务器错误码:"+XMLHttpRequest.status);
+	            }
+	   		});
+		}
+	</script>
 	<div class="layout_footer">© 2016 用户数据迁移系统.</div>
 </body>
 </html>
