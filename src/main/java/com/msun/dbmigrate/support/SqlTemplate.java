@@ -44,20 +44,35 @@ public class SqlTemplate implements Definition {
             template.queryForList("show tables");
             return true;
         } catch (Exception e) {
+            _.error("template test error!", e);
             return false;
         }
     }
 
     public static List<Map<String, Object>> select(JdbcTemplate template, String tableName, String where, Object key) {
-        List<Map<String, Object>> list = template.queryForList(genSelect(tableName, where), key);
-        _.info("select " + tableName + ",data=" + list);
-        return list;
+        try {
+            List<Map<String, Object>> list = template.queryForList(genSelect(tableName, where), key);
+            _.info("select " + tableName + ",data=" + list);
+            return list;
+        } catch (Exception e) {
+            _.error("template select error!", e);
+        }
+        return Lists.newArrayList();
     }
 
     public static void insert(JdbcTemplate template, String tableName, List<Map<String, Object>> list) {
         for (final Map<String, Object> map : list) {
-            template.update(genInsert(tableName, map), map.values().toArray(new Object[] {}));
+            try {
+                template.update(genInsert(tableName, map), map.values().toArray(new Object[] {}));
+            } catch (Exception e) {
+                _.error("template insert error!", e);
+            }
         }
+    }
+
+    public static List<String> allColumns(List<Map<String, Object>> list) {
+        if (list == null || list.size() == 0) return Lists.newArrayList();
+        return Lists.newLinkedList(list.get(0).keySet());
     }
 
     public static List<String> allColumns(Map<String, Object> map) {

@@ -82,14 +82,14 @@ body {
 						<div class="query-field">
 							<span>游戏玩家名称</span>
 							<div style="position: absolute; left: 103px; top: 60px;">
-							<input type="text" id="user_birthday" name="user_birthday" 
-							value="" class="input" required="required" maxlength="32">
+							<input type="text" id="keyword" name="keyword" 
+							th:value="${keyword}" class="input" required="required" maxlength="32">
 							</div>
 							<span style="position: absolute; left: 303px; top: 60px;">选择数据库</span>
 							<div style="position: absolute; left: 383px; top: 60px;">
-								<select name="dbconf" class="select form-select entryTemplateId-select">
+								<select id="dbconf" name="dbconf" class="select form-select entryTemplateId-select">
 								<option th:each="item : ${list}" th:value="${item.id}" 
-								th:inline="text">[[${item.dbAddr}]]:[[${item.dbName}]]</option>
+								th:inline="text" th:selected="${dbId==item.id}">[[${item.dbAddr}]]:[[${item.dbName}]]</option>
 								</select>
 							</div>
 							<a href="#" onclick="query();" style="position: absolute; left: 573px; top: 60px;" 
@@ -97,24 +97,61 @@ body {
 						</div>
 					</div>
 				</form>
+				
 				<div class="page-operate mt10"></div>
 				<div class="panel">
 					<div class="panel-main panel-gray">
-						<span>&nbsp;&nbsp;数据内容</span>
-						<div class="form pd10">
-							<form id="inputForm" action="#" method="post" accept-charset="utf-8">
-								<table border="0" cellspacing="0" cellpadding="0" width="100%">
-								
-								</table>
-							</form>
-						</div>
+						<span>&nbsp;&nbsp;数据库表</span>
+						<div class="list-table">
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								</tr><td th:each="data,iterStat : ${tableList}" 
+								th:if="${iterStat.index%4==0}" th:inline="text">[[${data}]]</td></tr>
+								</tr><td th:each="data,iterStat : ${tableList}" 
+								th:if="${iterStat.index%4==1}" th:inline="text">[[${data}]]</td></tr>
+								</tr><td th:each="data,iterStat : ${tableList}" 
+								th:if="${iterStat.index%4==2}" th:inline="text">[[${data}]]</td></tr>
+								</tr><td th:each="data,iterStat : ${tableList}" 
+								th:if="${iterStat.index%4==3}" th:inline="text">[[${data}]]</td></tr>
+				            </table>
+				        </div>
+					</div>
+				</div>
+				
+				<div class="page-operate mt10 panel" style="width:1701px;" th:each="data,iterStat : ${tableList}">
+					<div class="panel-main panel-gray" >
+						<span th:inline="text">&nbsp;&nbsp;[[${data}]]表内容</span>
+						<div class="list-table">
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<th th:each="th,iterStat : ${dataMap.get(data+'_th')}" th:inline="text">[[${th}]]</th>
+								</tr>
+								<tr th:each="th : ${dataMap.get(data)}">
+									<td th:each="td : ${dataMap.get(data+'_th')}" th:inline="text">[[${th.get(td)}]]</td>
+								</tr>
+				            </table>
+				        </div>
 					</div>
 				</div>
 			</div>
 						
 		</div>
 	</div>
-
+	<script> 
+		function query() {
+			var keyword = $("#keyword").val();
+			var dbId=$("#dbconf").val();
+			if(keyword == null || keyword == ""){
+	    		alert("游戏玩家名称不能为空");
+	    		return;
+	    	}
+			if(dbId == null || dbId == ""){
+	    		alert("选择数据库不能为空");
+	    		return;
+	    	}
+			
+			window.location = '/query?keyword='+keyword+"&dbId="+dbId;
+		}
+	</script>
 	<div class="layout_footer">© 2016 用户数据迁移系统.</div>
 </body>
 </html>

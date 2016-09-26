@@ -6,7 +6,10 @@ package com.msun.dbmigrate.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.msun.dbmigrate.support.JsonResult;
 
 /**
  * 数据迁移
@@ -21,5 +24,11 @@ public class DataMigrateController extends BaseController {
     public ModelAndView index() {
         return new ModelAndView("migrate")//
         .addObject("list", dbconf());
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult domigrate() {
+        return ok("迁移成功");
     }
 }

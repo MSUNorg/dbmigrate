@@ -43,6 +43,12 @@ public class BaseController implements Definition {
         return list;
     }
 
+    public DbMeta dbconf(String id) {
+        FireMap dao = pandora.getMap(DBCONF);
+        if (dao.get(id) != null) return JSON.toJavaObject(JSON.fromBytes(dao.get(id)), DbMeta.class);
+        return null;
+    }
+
     public JsonResult ok(String msg) {
         return JsonResult.successMsg(msg);
     }
