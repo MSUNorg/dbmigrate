@@ -19,6 +19,7 @@ public class DataMigrateController extends BaseController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView index() {
-        return new ModelAndView("migrate");
+        return new ModelAndView("migrate")//
+        .addObject("list", dbconf());
     }
 }

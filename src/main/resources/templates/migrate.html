@@ -14,12 +14,10 @@
 	padding: 0;
 	list-style-type: none;
 }
-
 a, img {
 	border: 0;
 	text-decoration: none;
 }
-
 body {
 	font: 12px/180% Arial, Helvetica, sans-serif, "新宋体";
 }
@@ -76,22 +74,42 @@ body {
 	<div class="layout_rightmain">
 		<div class="inner">
 
-			<div class="page-title"><i class="i_icon"></i> 管理后台首页</div>
-			<div class="pd20 left">
-			      <div class="alert alert-welcome">
-			        <div class="i-title">你好！欢迎登录用户数据迁移平台。</div>
-			        <!-- <div class="i-info">上次登录时间：${lastlogin}</div> -->
-			        <div class="i-info" th:inline="text">服务器时间：[[${#dates.format(serverAt, 'yyyy-MM-dd HH:mm')}]]</div>
-			      </div>
+			<div class="page-title"><i class="i_icon"></i> 数据迁移</div>
+			<div class="pd10 left">
+				<form id="searchForm" action="user" method="post">
+					<input type="hidden" id="entryTemplateId" name="entryTemplateId" value="${entryTemplateId}">
+					<div class="page-search">
+						<div class="query-field">
+							<span>游戏玩家名称</span>
+							<div style="position: absolute; left: 103px; top: 60px;">
+							<input type="text" id="user_birthday" name="user_birthday" 
+							value="" class="input" required="required" maxlength="32">
+							</div>
+							<span style="position: absolute; left: 303px; top: 60px;">选择数据库</span>
+							<div style="position: absolute; left: 383px; top: 60px;">
+								<select name="dbconf" class="select form-select entryTemplateId-select">
+								<option th:each="item : ${list}" th:value="${item.id}" 
+								th:inline="text">[[${item.dbAddr}]]:[[${item.dbName}]]</option>
+								</select>
+							</div>
+							<span style="position: absolute; left: 578px; top: 60px;">目的数据库</span>
+							<div style="position: absolute; left: 673px; top: 60px;">
+								<select name="dbconf" class="select form-select entryTemplateId-select">
+								<option th:each="item : ${list}" th:value="${item.id}" 
+								th:inline="text">[[${item.dbAddr}]]:[[${item.dbName}]]</option>
+								</select>
+							</div>
+							<a href="#" onclick="query();" style="position: absolute; left: 873px; top: 60px;" 
+							class="btn btn-primary">迁移</a>
+						</div>
+					</div>
+				</form>
+				<div class="page-operate mt10"></div>
 			</div>
 			
 		</div>
 	</div>
-	<!-- end content -->
 
-	<!--begin footer -->
 	<div class="layout_footer">© 2016 用户数据迁移系统.</div>
-	<!--end footer -->
-
 </body>
 </html>

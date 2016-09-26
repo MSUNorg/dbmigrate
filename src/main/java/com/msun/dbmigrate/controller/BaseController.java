@@ -3,15 +3,20 @@
  */
 package com.msun.dbmigrate.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.lamfire.json.JSON;
+import com.lamfire.pandora.FireMap;
+import com.lamfire.utils.Lists;
 import com.msun.dbmigrate.cons.Definition;
 import com.msun.dbmigrate.support.JsonResult;
 import com.msun.dbmigrate.support.PandoraDataStore;
+import com.msun.dbmigrate.support.utils.DbMeta;
 
 /**
  * @author zxc Aug 8, 2016 5:00:13 PM
@@ -24,6 +29,19 @@ public class BaseController implements Definition {
     protected HttpServletRequest   request;
     @Autowired
     protected HttpSession          session;
+
+    public List<DbMeta> dbconf() {
+        FireMap dao = pandora.getMap(DBCONF);
+        List<String> keys = dao.keys();
+        List<DbMeta> list = Lists.newLinkedList();
+        for (String key : keys) {
+            if (dao.get(key) != null) {
+                DbMeta dbMeta = JSON.toJavaObject(JSON.fromBytes(dao.get(key)), DbMeta.class);
+                list.add(dbMeta);
+            }
+        }
+        return list;
+    }
 
     public JsonResult ok(String msg) {
         return JsonResult.successMsg(msg);

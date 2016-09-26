@@ -19,6 +19,7 @@ public class DataQueryController extends BaseController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView index() {
-        return new ModelAndView("query");
+        return new ModelAndView("query")//
+        .addObject("list", dbconf());
     }
 }

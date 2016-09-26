@@ -14,12 +14,10 @@
 	padding: 0;
 	list-style-type: none;
 }
-
 a, img {
 	border: 0;
 	text-decoration: none;
 }
-
 body {
 	font: 12px/180% Arial, Helvetica, sans-serif, "新宋体";
 }
@@ -98,13 +96,13 @@ body {
 										<td width="20%" align="right">数据库登录名:</td>
 										<td width="80%" align="left">
 											<input type="text" id="name" name="name" th:value="${dbMeta.name}" class="input"
-											required="required" maxlength="8" /></td>
+											required="required" maxlength="80" /></td>
 									</tr>
 									<tr>
 										<td width="20%" align="right">数据库登录密码:</td>
 										<td width="80%" align="left">
 											<input type="text" id="passwd" name="passwd" th:value="${dbMeta.passwd}" class="input"
-											required="required" maxlength="8" /></td>
+											required="required" maxlength="80" /></td>
 									</tr>
 									<tr>
 										<td align="right">&nbsp;</td>

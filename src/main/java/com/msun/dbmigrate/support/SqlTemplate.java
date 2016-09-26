@@ -35,6 +35,19 @@ public class SqlTemplate implements Definition {
         return new JdbcTemplate(dataSource);
     }
 
+    public static JdbcTemplate jdbc(String dbAddr, String dbName, String name, String password) {
+        return jdbc(dbAddr + "/" + dbName, name, password);
+    }
+
+    public static boolean test(JdbcTemplate template) {
+        try {
+            template.queryForList("show tables");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public static List<Map<String, Object>> select(JdbcTemplate template, String tableName, String where, Object key) {
         List<Map<String, Object>> list = template.queryForList(genSelect(tableName, where), key);
         _.info("select " + tableName + ",data=" + list);

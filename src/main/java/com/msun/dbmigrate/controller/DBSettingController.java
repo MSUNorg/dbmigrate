@@ -3,9 +3,8 @@
  */
 package com.msun.dbmigrate.controller;
 
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,8 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.lamfire.code.PUID;
 import com.lamfire.json.JSON;
 import com.lamfire.pandora.FireMap;
-import com.lamfire.utils.Lists;
 import com.msun.dbmigrate.support.JsonResult;
+import com.msun.dbmigrate.support.SqlTemplate;
 import com.msun.dbmigrate.support.utils.DbMeta;
 
 /**
@@ -28,17 +27,8 @@ public class DBSettingController extends BaseController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView list() {
-        FireMap dao = pandora.getMap(DBCONF);
-        List<String> keys = dao.keys();
-        List<DbMeta> list = Lists.newLinkedList();
-        for (String key : keys) {
-            if (dao.get(key) != null) {
-                DbMeta dbMeta = JSON.toJavaObject(JSON.fromBytes(dao.get(key)), DbMeta.class);
-                list.add(dbMeta);
-            }
-        }
         return new ModelAndView("setting")//
-        .addObject("list", list);
+        .addObject("list", dbconf());
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -68,6 +58,10 @@ public class DBSettingController extends BaseController {
         String passwd = StringUtils.trim(dbMeta.getPasswd());
         if (StringUtils.isEmpty(dbAddr) || StringUtils.isEmpty(dbName) || StringUtils.isEmpty(name)
             || StringUtils.isEmpty(passwd)) return fail("参数为空");
+
+        // 测试连接数据库
+        JdbcTemplate template = SqlTemplate.jdbc(dbAddr, dbName, name, passwd);
+        if (!SqlTemplate.test(template)) return fail("参数不正确,连接数据库【" + dbAddr + ":" + dbName + "】失败");
 
         FireMap dao = pandora.getMap(DBCONF);
         String id = PUID.makeAsString();

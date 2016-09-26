@@ -14,12 +14,10 @@
 	padding: 0;
 	list-style-type: none;
 }
-
 a, img {
 	border: 0;
 	text-decoration: none;
 }
-
 body {
 	font: 12px/180% Arial, Helvetica, sans-serif, "新宋体";
 }
@@ -103,7 +101,7 @@ body {
 								<td th:inline="text">[[${data.dbName}]]</td>
 								<td th:inline="text">[[${data.name}]]</td>
 								<td th:inline="text">[[${data.passwd}]]</td>
-								<td th:inline="text">[[${#dates.format(data.createAt, 'yyyy-MM-dd')}]]</td>
+								<td th:inline="text">[[${#dates.format(data.createAt, 'yyyy-MM-dd HH:mm')}]]</td>
 								<td class="i-operate">
 									<a th:href="@{'/setting/edit/'+${data.id}}" href="/setting/edit/0">编辑 </a>&nbsp;&nbsp;
 									<a href="#" th:onclick="|del('${data.id}')|">删除 </a>
