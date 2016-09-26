@@ -3,10 +3,10 @@
  */
 package com.msun.dbmigrate.controller;
 
-import static com.msun.dbmigrate.support.SqlTemplate.allColumns;
-import static com.msun.dbmigrate.support.SqlTemplate.jdbc;
-import static com.msun.dbmigrate.support.SqlTemplate.map;
-import static com.msun.dbmigrate.support.SqlTemplate.select;
+import static com.msun.dbmigrate.support.utils.SqlTemplate.allColumns;
+import static com.msun.dbmigrate.support.utils.SqlTemplate.jdbc;
+import static com.msun.dbmigrate.support.utils.SqlTemplate.map;
+import static com.msun.dbmigrate.support.utils.SqlTemplate.select;
 
 import java.util.List;
 import java.util.Map;

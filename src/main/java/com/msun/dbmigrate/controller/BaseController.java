@@ -15,8 +15,8 @@ import com.lamfire.pandora.FireMap;
 import com.lamfire.utils.Lists;
 import com.msun.dbmigrate.cons.Definition;
 import com.msun.dbmigrate.support.JsonResult;
-import com.msun.dbmigrate.support.PandoraDataStore;
 import com.msun.dbmigrate.support.utils.DbMeta;
+import com.msun.dbmigrate.support.utils.PandoraDataStore;
 
 /**
  * @author zxc Aug 8, 2016 5:00:13 PM

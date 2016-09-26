@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.msun.dbmigrate.support.SqlTemplate;
+import com.msun.dbmigrate.support.utils.SqlTemplate;
 
 /**
  * <pre>

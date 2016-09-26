@@ -1,7 +1,7 @@
 /*
  * Copyright 2015-2020 uuzu.com All right reserved.
  */
-package com.msun.dbmigrate.support;
+package com.msun.dbmigrate.support.utils;
 
 import java.util.List;
 import java.util.Map;

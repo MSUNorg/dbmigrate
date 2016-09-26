@@ -13,8 +13,8 @@ import com.lamfire.code.PUID;
 import com.lamfire.json.JSON;
 import com.lamfire.pandora.FireMap;
 import com.msun.dbmigrate.support.JsonResult;
-import com.msun.dbmigrate.support.SqlTemplate;
 import com.msun.dbmigrate.support.utils.DbMeta;
+import com.msun.dbmigrate.support.utils.SqlTemplate;
 
 /**
  * 数据库配置
