@@ -41,8 +41,7 @@ body {
 	<div class="layout_header">
 		<div class="header">
 			<div class="h_logo">
-				<a href="#" title="用户数据迁移系统"> <!-- <span style="color: #fff;font-size: 20px;line-height: 50px;text-align: center;"><b>动态表单管理系统</b></span> -->
-				</a>
+				<a href="#" title="用户数据迁移系统"> </a>
 			</div>
 			<div class="h_nav">
 				<span class="hi"> 您好,admin!</span> <span class="link"><a
@@ -75,44 +74,52 @@ body {
 	<!-- begin content -->
 	<div class="layout_rightmain">
 		<div class="inner">
-
-			<div class="page-title"><i class="i_icon"></i> 数据库连接配置</div>
+			<div class="page-title"><i class="i_icon"></i> 添加数据库连接配置</div>
 			<div class="pd10 left">
-				<form id="searchForm" action="user" method="post">
-				 <div class="page-search">
-					<a href="/setting/add" class="btn btn-primary">添加</a>
-				 </div>
-				 </form>
-				<div class="page-operate mt10">
-				</div>
 				<div class="panel">
-					<div class="list-table">
-						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<th width="60">唯一id</th>
-								<th width="60">数据库地址</th>
-								<th width="100">数据库名称</th>
-								<th width="200">数据库登录名</th>
-								<th width="100">数据库密码</th>
-								<th width="60">创建时间</th>
-								<th>操作</th>
-							</tr>
-							<tr>
-								<td>${dataField.code}</td>
-								<td>${dataField.name}</td>
-								<td>${dataField.type}</td>
-								<td>${dataField.length}</td>
-								<td>${dataField.widget}</td>
-								<td class="i-operate">
-									<a href="${ctx}/dataField/edit/${dataField.id}">编辑 </a>&nbsp;&nbsp;
-									<a href="#" onclick="del(${dataField.id})">删除 </a>
-								</td>
-							</tr>
-			            </table>
-			        </div>
-			    </div>
+					<div class="panel-main panel-gray">
+						<div class="form pd10">
+							<form id="inputForm" action="#" method="post" accept-charset="utf-8">
+								<input type="hidden" name="id" value="${dataField.id}" />
+								<table border="0" cellspacing="0" cellpadding="0" width="100%">
+									<tr>
+										<td width="20%" align="right">数据库地址:</td>
+										<td width="80%" align="left">
+											<input type="text" id="code" name="code" value="${dataField.code}" class="input"
+											required="required" maxlength="63" /> <span id="pNo">（格式是:192.168.180.155）</span></td>
+									</tr>
+									<tr>
+										<td width="20%" align="right">数据库名称:</td>
+										<td width="80%" align="left"><input type="text" id="name"
+											name="name" value="${dataField.name}" class="input"
+											maxlength="63" /></td>
+									</tr>
+									<tr>
+										<td width="20%" align="right">数据库登录名:</td>
+										<td width="80%" align="left"><input type="text" id="length"
+											name="length" value="${dataField.length}" class="input"
+											required="required" maxlength="8" /></td>
+									</tr>
+									<tr>
+										<td width="20%" align="right">数据库登录密码:</td>
+										<td width="80%" align="left"><input type="text" id="length"
+											name="length" value="${dataField.length}" class="input"
+											required="required" maxlength="8" /></td>
+									</tr>
+									<tr>
+										<td align="right">&nbsp;</td>
+										<td align="left">
+											<input class="btn btn-primary btn-large save-btn" type="button" name="yt0" value="保存" />
+											<button type="button" class="btn default" onclick="history.back()">返回</button>	
+										</td>
+									</tr>
+								</table>
+							</form>
+						</div>
+					</div>
+				</div>
 			</div>
-			
+
 		</div>
 	</div>
 

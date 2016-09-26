@@ -29,6 +29,7 @@ public interface Definition {
     public final static long    PHONE_CODE_TIMEOUT     = 60000;
 
     public final static String  CUR_USER               = "cur_user";
+    public final static String  DBCONF                 = "DBCONF";
 
     DateFormat                  f                      = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 }

@@ -11,16 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.lamfire.json.JSON;
 import com.msun.dbmigrate.cons.Definition;
 import com.msun.dbmigrate.support.JsonResult;
+import com.msun.dbmigrate.support.PandoraDataStore;
 
 /**
  * @author zxc Aug 8, 2016 5:00:13 PM
  */
 public class BaseController implements Definition {
 
+    public static PandoraDataStore pandora = PandoraDataStore.getInstance();
+
     @Autowired
-    protected HttpServletRequest request;
+    protected HttpServletRequest   request;
     @Autowired
-    protected HttpSession        session;
+    protected HttpSession          session;
 
     public JsonResult ok(String msg) {
         return JsonResult.successMsg(msg);

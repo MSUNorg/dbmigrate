@@ -27,6 +27,18 @@
 
     <dependencies> 
 		<!-- commons tools -->
+		<dependency>
+            <groupId>com.lamfire</groupId>
+            <artifactId>pandora</artifactId>
+            <version>1.0.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.lamfire</groupId>
+            <artifactId>leveldb</artifactId>
+            <version>1.8.0</version>
+            <type>jar</type>
+        </dependency>
         <dependency>
             <groupId>com.lamfire</groupId>
             <artifactId>lamfire</artifactId>
@@ -136,12 +148,19 @@
 		-->
 		
 		<!-- database -->
+		<!-- 
 		<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>${spring.boot.version}</version>
             <type>jar</type>
-        </dependency>  
+        </dependency> 
+        --> 
+        <dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-jdbc</artifactId>
+		    <version>4.1.8.RELEASE</version>
+		</dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
