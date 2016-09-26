@@ -96,7 +96,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter implements
         .anyRequest().authenticated()//
         .and().formLogin().defaultSuccessUrl("/").loginPage("/login").failureUrl("/login?error").permitAll()//
         .and().logout().deleteCookies("JSESSIONID").permitAll()//
-        .and().rememberMe().key("11a63e5e-ccd7-452c-856e-025b08f1211e").tokenValiditySeconds(2592000)//
+        .and().rememberMe().key("11a63e5e-zzd7-452c-856e-025b08f1211e").tokenValiditySeconds(2592000)//
         .and().exceptionHandling().accessDeniedHandler(accessDeniedHandlerImpl())//
         .and().sessionManagement().maximumSessions(1).expiredUrl("/login");
     }

@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author zxc Sep 26, 2016 10:06:24 AM
  */
 @Controller
+@RequestMapping(value = "/setting")
 public class DBSettingController extends BaseController {
 
     @RequestMapping(method = RequestMethod.GET)
