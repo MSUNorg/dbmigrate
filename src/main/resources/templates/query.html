@@ -99,9 +99,9 @@ body {
 				</form>
 				
 				<div class="page-operate mt10"></div>
-				<div class="panel">
+				<div class="panel" th:if="${tableList}">
 					<div class="panel-main panel-gray">
-						<span>&nbsp;&nbsp;数据库表</span>
+						<span th:inline="text">&nbsp;&nbsp;数据库表([[${tableList.size()}]])</span>
 						<div class="list-table">
 							<table width="100%" border="0" cellspacing="0" cellpadding="0">
 								</tr><td th:each="data,iterStat : ${tableList}" 
@@ -117,9 +117,9 @@ body {
 					</div>
 				</div>
 				
-				<div class="page-operate mt10 panel" style="width:1701px;" th:each="data,iterStat : ${tableList}">
+				<div class="page-operate mt10 panel" th:each="data,iterStat : ${tableList}">
 					<div class="panel-main panel-gray" >
-						<span th:inline="text">&nbsp;&nbsp;[[${data}]]表内容</span>
+						<span th:inline="text">&nbsp;&nbsp;[[${data}]]表内容([[${dataMap.get(data) == null ? 0 : dataMap.get(data).size()}]])</span>
 						<div class="list-table">
 							<table width="100%" border="0" cellspacing="0" cellpadding="0">
 								<tr>

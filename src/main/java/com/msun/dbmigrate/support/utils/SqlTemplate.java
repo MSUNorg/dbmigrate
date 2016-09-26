@@ -60,14 +60,16 @@ public class SqlTemplate implements Definition {
         return Lists.newArrayList();
     }
 
-    public static void insert(JdbcTemplate template, String tableName, List<Map<String, Object>> list) {
+    public static int insert(JdbcTemplate template, String tableName, List<Map<String, Object>> list) {
+        int count = 0;
         for (final Map<String, Object> map : list) {
             try {
-                template.update(genInsert(tableName, map), map.values().toArray(new Object[] {}));
+                count += template.update(genInsert(tableName, map), map.values().toArray(new Object[] {}));
             } catch (Exception e) {
                 _.error("template insert error!", e);
             }
         }
+        return count;
     }
 
     public static List<String> allColumns(List<Map<String, Object>> list) {

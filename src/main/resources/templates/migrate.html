@@ -114,21 +114,21 @@ body {
 	<script> 
 		function migrate() {
 			var keyword = $("#keyword").val();
-			var dbconf1=$("#dbconf1").val();
-			var dbconf2=$("#dbconf2").val();
+			var dbId=$("#dbconf1").val();
+			var targetId=$("#dbconf2").val();
 			if(keyword == null || keyword == ""){
 	    		alert("游戏玩家名称不能为空");
 	    		return;
 	    	}
-			if(dbconf1 == null || dbconf1 == ""){
+			if(dbId == null || dbId == ""){
 	    		alert("选择数据库不能为空");
 	    		return;
 	    	}
-			if(dbconf2 == null || dbconf2 == ""){
+			if(targetId == null || targetId == ""){
 	    		alert("目的数据库不能为空");
 	    		return;
 	    	}
-			if(dbconf2 == dbconf1){
+			if(targetId == dbId){
 				alert("选择数据库和目的数据库不能一样");
 	    		return;
 			}
@@ -139,7 +139,7 @@ body {
 				type : "POST",
 				cache : false,
 				dataType : "json",
-				data : {"keyword":keyword,"dbconf1":dbconf1,"dbconf2":dbconf2},
+				data : {"keyword":keyword,"dbId":dbId,"targetId":targetId},
 				success : function(data) {
 					layer.close(index); 
 					console.log(data);

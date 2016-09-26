@@ -5,7 +5,6 @@ package com.msun.dbmigrate.controller;
 
 import static com.msun.dbmigrate.support.utils.SqlTemplate.allColumns;
 import static com.msun.dbmigrate.support.utils.SqlTemplate.jdbc;
-import static com.msun.dbmigrate.support.utils.SqlTemplate.map;
 import static com.msun.dbmigrate.support.utils.SqlTemplate.select;
 
 import java.util.List;
@@ -31,16 +30,6 @@ import com.msun.dbmigrate.support.utils.DbMeta;
 @Controller
 @RequestMapping(value = "/query")
 public class DataQueryController extends BaseController {
-
-    static Map<String, String> tableMapByAccount = map(new String[][] { { "accounts", "login" },
-            { "profile", "login" }, { "characters", "account_name" }, { "character_elf_warehouse", "account_name" },
-            { "character_shop_restrict", "account_name" }, { "character_vip_time", "account" },
-            { "character_warehouse", "account_name" }, { "character_shop_consumption", "account_name" } });
-    static Map<String, String> tableMapByChar    = map(new String[][] { { "character_items", "char_id" },
-            { "character_config", "object_id" }, { "character_maptime", "char_id" },
-            { "character_passivespells", "char_obj_id" }, { "character_quests", "char_id" },
-            { "character_skills", "char_obj_id" }, { "character_teleport", "char_id" }, { "pets", "item_obj_id" },
-            { "character_shop_warehouse", "char_id" } });
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView index(String keyword, String dbId) {

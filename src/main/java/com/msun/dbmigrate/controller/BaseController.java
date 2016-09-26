@@ -3,7 +3,10 @@
  */
 package com.msun.dbmigrate.controller;
 
+import static com.msun.dbmigrate.support.utils.SqlTemplate.map;
+
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,12 +26,22 @@ import com.msun.dbmigrate.support.utils.PandoraDataStore;
  */
 public class BaseController implements Definition {
 
-    public static PandoraDataStore pandora = PandoraDataStore.getInstance();
+    public static PandoraDataStore pandora           = PandoraDataStore.getInstance();
 
     @Autowired
     protected HttpServletRequest   request;
     @Autowired
     protected HttpSession          session;
+
+    static Map<String, String>     tableMapByAccount = map(new String[][] { { "accounts", "login" },
+            { "profile", "login" }, { "characters", "account_name" }, { "character_elf_warehouse", "account_name" },
+            { "character_shop_restrict", "account_name" }, { "character_vip_time", "account" },
+            { "character_warehouse", "account_name" }, { "character_shop_consumption", "account_name" } });
+    static Map<String, String>     tableMapByChar    = map(new String[][] { { "character_items", "char_id" },
+            { "character_config", "object_id" }, { "character_maptime", "char_id" },
+            { "character_passivespells", "char_obj_id" }, { "character_quests", "char_id" },
+            { "character_skills", "char_obj_id" }, { "character_teleport", "char_id" }, { "pets", "item_obj_id" },
+            { "character_shop_warehouse", "char_id" } });
 
     public List<DbMeta> dbconf() {
         FireMap dao = pandora.getMap(DBCONF);
