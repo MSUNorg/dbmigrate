@@ -28,9 +28,9 @@ public class DbmigrateLauncher {
 
             @Override
             public void customize(ConfigurableEmbeddedServletContainer container) {
-                container.addErrorPages(new ErrorPage(HttpStatus.UNAUTHORIZED, "/404.html"),
+                container.addErrorPages(new ErrorPage(HttpStatus.UNAUTHORIZED, "/401.html"),
                                         new ErrorPage(HttpStatus.NOT_FOUND, "/404.html"),
-                                        new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/404.html"));
+                                        new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/500.html"));
             }
         };
     }

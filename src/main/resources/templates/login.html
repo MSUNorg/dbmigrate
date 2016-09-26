@@ -1,17 +1,18 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="renderer" content="webkit">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="renderer" content="webkit"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
     <title>用户数据迁移系统</title>
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
-    <link rel="stylesheet" href="/css/admin/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/admin/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/admin/ionicons.min.css">
-    <link rel="stylesheet" href="/css/admin/AdminLTE.min.css">
-    <link rel="stylesheet" href="/css/admin/skin-blue.min.css">
+    <link rel="stylesheet" th:href="@{~/css/admin/bootstrap.min.css}" href="/css/admin/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{~/css/admin/font-awesome.min.css}" href="/css/admin/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{~/css/admin/ionicons.min.css}" href="/css/admin/ionicons.min.css">
+    <link rel="stylesheet" th:href="@{~/css/admin/AdminLTE.min.css}" href="/css/admin/AdminLTE.min.css">
+    <link rel="stylesheet" th:href="@{~/css/admin/skin-blue.min.css}" href="/css/admin/skin-blue.min.css">
 
     <script src="/js/admin/jQuery-2.1.4.min.js"></script>
     <script src="/js/admin/bootstrap.min.js"></script>
@@ -21,7 +22,7 @@
   	<![endif]-->
 </head>
 
-<body class="hold-transition login-page">
+<body class="hold-transition login-page" onload="document.forms[0].username.focus();">
   <div class="login-box">
     <div class="login-logo">
       <a href="#" style="font-family: 'Microsoft Yahei'">用户数据迁移系统</a>

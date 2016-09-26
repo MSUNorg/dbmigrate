@@ -116,6 +116,7 @@
 		</dependency>
 		
 		<!-- Spring Data Redis, Session -->
+		<!--  
 		<dependency>  
 	        <groupId>org.springframework.boot</groupId>  
 	        <artifactId>spring-boot-starter-redis</artifactId>  
@@ -132,6 +133,7 @@
 			<version>2.6.2</version>
 			<type>jar</type>
 		</dependency>
+		-->
 		
 		<!-- database -->
 		<dependency>
