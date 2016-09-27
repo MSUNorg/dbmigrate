@@ -15,7 +15,7 @@ public class DbMeta {
     private String dbName;  // 数据库名称
     private String name;    // 数据库登录名
     private String passwd;  // 数据库密码
-    private long   createAt; // 数据库密码
+    private long   createAt; // 创建时间
 
     public String getId() {
         return id;
