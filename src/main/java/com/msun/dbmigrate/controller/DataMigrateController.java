@@ -50,6 +50,9 @@ public class DataMigrateController extends BaseController {
         JdbcTemplate ttemplate = jdbc(tdbMeta.getDbAddr(), tdbMeta.getDbName(), tdbMeta.getName(), tdbMeta.getPasswd());
         AtomicInteger counter = new AtomicInteger();
 
+        List<Map<String, Object>> accounts = select(template, "accounts", "login", keyword);
+        if (accounts == null || accounts.size() == 0) return fail("迁移失败,用户信息不存在");
+
         for (Entry<String, String> entry : tableMapByAccount.entrySet()) {
             List<Map<String, Object>> list = select(template, entry.getKey(), entry.getValue(), keyword);
             counter.getAndAdd(insert(ttemplate, entry.getKey(), list));
