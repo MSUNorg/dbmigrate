@@ -4,7 +4,6 @@
 package com.msun.dbmigrate.controller;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -60,8 +59,8 @@ public class DBSettingController extends BaseController {
             || StringUtils.isEmpty(passwd)) return fail("参数为空");
 
         // 测试连接数据库
-        JdbcTemplate template = SqlTemplate.jdbc(dbAddr, dbName, name, passwd);
-        if (!SqlTemplate.test(template)) return fail("参数不正确,连接数据库【" + dbAddr + ":" + dbName + "】失败");
+        SqlTemplate template = new SqlTemplate(dbAddr, dbName, name, passwd);
+        if (!template.test()) return fail("参数不正确,连接数据库【" + dbAddr + ":" + dbName + "】失败");
 
         FireMap dao = pandora.getMap(DBCONF);
         String id = PUID.makeAsString();

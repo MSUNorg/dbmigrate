@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import com.msun.dbmigrate.support.utils.SqlTemplate;
 
 /**
@@ -42,8 +40,8 @@ import com.msun.dbmigrate.support.utils.SqlTemplate;
  */
 public class JDBCTemplateTest {
 
-    static JdbcTemplate template  = SqlTemplate.jdbc("192.168.43.155/tuzi", "wxbet", "wxbet2016");
-    static JdbcTemplate template2 = SqlTemplate.jdbc("192.168.43.155/tuzi2", "wxbet", "wxbet2016");
+    static SqlTemplate template  = new SqlTemplate("192.168.43.155", "tuzi", "wxbet", "wxbet2016");
+    static SqlTemplate template2 = new SqlTemplate("192.168.43.155", "tuzi2", "wxbet", "wxbet2016");
 
     public static void main(String[] args) {
         Map<String, String> tableMap = SqlTemplate.map(new String[][] { { "accounts", "login" },
@@ -56,12 +54,12 @@ public class JDBCTemplateTest {
         // query by name
         String key = "11aa22";
         for (Entry<String, String> entry : tableMap.entrySet()) {
-            List<Map<String, Object>> list = SqlTemplate.select(template, entry.getKey(), entry.getValue(), key);
-            SqlTemplate.insert(template2, entry.getKey(), list);
+            List<Map<String, Object>> list = template.select(entry.getKey(), entry.getValue(), key);
+            template2.insert(entry.getKey(), null, list);
         }
 
         // characters objid
-        List<Map<String, Object>> charactersList = SqlTemplate.select(template, "characters", "account_name", key);
+        List<Map<String, Object>> charactersList = template.select("characters", "account_name", key);
         for (Map<String, Object> map : charactersList) {
             optCharId(map.get("objid"));
         }
@@ -75,15 +73,15 @@ public class JDBCTemplateTest {
                 { "character_skills", "char_obj_id" }, { "character_teleport", "char_id" }, { "pets", "item_obj_id" },
                 { "character_shop_warehouse", "char_id" } });
         for (Entry<String, String> entry : tableMap.entrySet()) {
-            List<Map<String, Object>> list = SqlTemplate.select(template, entry.getKey(), entry.getValue(), id);
-            SqlTemplate.insert(template2, entry.getKey(), list);
+            List<Map<String, Object>> list = template.select(entry.getKey(), entry.getValue(), id);
+            template2.insert(entry.getKey(), null, list);
         }
 
-        List<Map<String, Object>> itemsList = SqlTemplate.select(template, "character_items", "char_id", id);
+        List<Map<String, Object>> itemsList = template.select("character_items", "char_id", id);
         for (Map<String, Object> map : itemsList) {
             Object item_id = map.get("id");
-            List<Map<String, Object>> list = SqlTemplate.select(template, "character_itemupdate", "item_id", item_id);
-            SqlTemplate.insert(template2, "character_itemupdate", list);
+            List<Map<String, Object>> list = template.select("character_itemupdate", "item_id", item_id);
+            template2.insert("character_itemupdate", null, list);
         }
     }
 }
