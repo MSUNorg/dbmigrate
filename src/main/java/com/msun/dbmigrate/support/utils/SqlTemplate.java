@@ -44,21 +44,22 @@ public class SqlTemplate extends JdbcTemplate implements Definition {
 
     public String primaryKey(String tableName) {
         try {
-            Map<String, Object> map = queryForMap("select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = ? and TABLE_SCHEMA=?",
+            List<Map<String, Object>> list = queryForList("select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = ? and TABLE_SCHEMA=?",
                                                   tableName, dbName);
-            return (String) map.get("COLUMN_NAME");
+            if (list == null || list.size() == 0) return "";
+            return (String) list.get(0).get("COLUMN_NAME");
         } catch (Exception e) {
-            _.error("template test error!", e);
+            _.error("template primaryKey error!tableName=" + tableName, e);
             return "";
         }
     }
 
     @SuppressWarnings("deprecation")
-    public Long maxId(String tableName) {
+    public Long maxId(String tableName, String primaryKey) {
         try {
-            return queryForLong("select max(id)+1 from " + tableName);
+            return queryForLong("select max(" + primaryKey + ")+1 from " + tableName);
         } catch (Exception e) {
-            _.error("template test error!", e);
+            _.error("template maxId error!tableName=" + tableName, e);
             return Long.MAX_VALUE;
         }
     }

@@ -245,7 +245,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.msun.wxbet.WxbetApplication</mainClass>
+                            <mainClass>com.msun.dbmigrate.DbmigrateLauncher</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Class-Path>conf/</Class-Path>
