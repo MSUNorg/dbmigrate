@@ -83,23 +83,34 @@ body {
 							<span>游戏玩家名称</span>
 							<div style="position: absolute; left: 103px; top: 60px;">
 							<input type="text" id="keyword" name="keyword" 
-							value="" class="input" required="required" maxlength="32">
+							th:value="${keyword}" class="input" required="required" maxlength="32">
 							</div>
 							<span style="position: absolute; left: 303px; top: 60px;">选择数据库</span>
 							<div style="position: absolute; left: 383px; top: 60px;">
 								<select id="dbconf1" name="dbconf1" class="select form-select entryTemplateId-select">
 								<option th:each="item : ${list}" th:value="${item.id}" 
-								th:inline="text">[[${item.dbAddr}]]:[[${item.dbName}]]</option>
+								th:inline="text" th:selected="${dbId==item.id}">[[${item.dbAddr}]]:[[${item.dbName}]]</option>
 								</select>
 							</div>
-							<span style="position: absolute; left: 578px; top: 60px;">目的数据库</span>
-							<div style="position: absolute; left: 673px; top: 60px;">
+							<a href="#" onclick="query();" style="position: absolute; left: 873px; top: 60px;" 
+							class="btn btn-primary">查询角色</a>
+						</div>
+						<div th:if="${charactersList != null && charactersList.size() > 0}">
+							<span style="position: absolute; left: 103px; top: 60px;">选择玩家角色</span>
+							<div style="position: absolute; left: 183px; top: 60px;">
+								<select id="charId" name="charId" class="select form-select entryTemplateId-select">
+								<option th:each="char : ${charactersList}" th:value="${char.objid}" 
+								th:inline="text">[[${char.char_name}]]</option>
+								</select>
+							</div>
+							<span style="position: absolute; left: 378px; top: 60px;">目的数据库</span>
+							<div style="position: absolute; left: 473px; top: 60px;">
 								<select id="dbconf2" name="dbconf2" class="select form-select entryTemplateId-select">
 								<option th:each="item : ${list}" th:value="${item.id}" 
 								th:inline="text">[[${item.dbAddr}]]:[[${item.dbName}]]</option>
 								</select>
 							</div>
-							<a href="#" onclick="migrate();" style="position: absolute; left: 873px; top: 60px;" 
+							<a href="#" onclick="migrate();" style="position: absolute; left: 673px; top: 60px;" 
 							class="btn btn-primary">迁移</a>
 						</div>
 					</div>
@@ -112,10 +123,24 @@ body {
 
 	<script type="text/javascript" src="/js/layer/layer.js"></script>
 	<script> 
+		function query() {
+			var keyword = $("#keyword").val();
+			var dbId=$("#dbconf1").val();
+			if(keyword == null || keyword == ""){
+	    		alert("游戏玩家名称不能为空");
+	    		return;
+	    	}
+			if(dbId == null || dbId == ""){
+	    		alert("选择数据库不能为空");
+	    		return;
+	    	}
+			window.location = '/migrateRole?keyword='+keyword+"&dbId="+dbId;
+		}
 		function migrate() {
 			var keyword = $("#keyword").val();
 			var dbId=$("#dbconf1").val();
 			var targetId=$("#dbconf2").val();
+			var charId=$("#charId").val();
 			if(keyword == null || keyword == ""){
 	    		alert("游戏玩家名称不能为空");
 	    		return;
@@ -132,14 +157,18 @@ body {
 				alert("选择数据库和目的数据库不能一样");
 	    		return;
 			}
+			if(charId == null || charId == ""){
+				alert("游戏玩家角色不能为空");
+	    		return;
+			}
 			
 			var index = layer.load(0, {shade: [0.8, '#EDEFF4']}); 
 			$.ajax({
-				url : "/migrate",
+				url : "/migrateRole",
 				type : "POST",
 				cache : false,
 				dataType : "json",
-				data : {"keyword":keyword,"dbId":dbId,"targetId":targetId},
+				data : {"keyword":keyword,"dbId":dbId,"targetId":targetId,"charId":charId},
 				success : function(data) {
 					layer.close(index); 
 					console.log(data);

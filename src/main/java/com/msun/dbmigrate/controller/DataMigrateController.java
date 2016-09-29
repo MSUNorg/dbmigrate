@@ -5,7 +5,6 @@ package com.msun.dbmigrate.controller;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,9 +27,45 @@ import com.msun.dbmigrate.support.utils.SqlTemplate;
 public class DataMigrateController extends BaseController {
 
     @RequestMapping(value = "/migrateRole", method = RequestMethod.GET)
-    public ModelAndView migrateRole() {
+    public ModelAndView migrateRole(String keyword, String dbId) {
+        List<Map<String, Object>> charactersList = null;
+        if (StringUtils.isNotEmpty(keyword) && StringUtils.isNotEmpty(dbId)) {
+            DbMeta dbMeta = dbconf(dbId);
+            SqlTemplate template = new SqlTemplate(dbMeta.getDbAddr(), dbMeta.getDbName(), dbMeta.getName(),
+                                                   dbMeta.getPasswd());
+            charactersList = template.select("characters", "account_name", keyword);
+        }
         return new ModelAndView("migrateRole")//
-        .addObject("list", dbconf());
+        .addObject("list", dbconf())//
+        .addObject("charactersList", charactersList)//
+        .addObject("dbId", dbId)//
+        .addObject("keyword", keyword);
+    }
+
+    @RequestMapping(value = "/migrateRole", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult domigrateRole(String keyword, Long charId, String dbId, String targetId) {
+        if (StringUtils.isEmpty(keyword) || StringUtils.isEmpty(dbId)) return fail("迁移失败,参数错误");
+        DbMeta dbMeta = dbconf(dbId);
+        DbMeta tdbMeta = dbconf(targetId);
+        if (dbMeta == null || tdbMeta == null) return fail("迁移失败,数据库参数错误");
+
+        SqlTemplate template = new SqlTemplate(dbMeta.getDbAddr(), dbMeta.getDbName(), dbMeta.getName(),
+                                               dbMeta.getPasswd());
+        SqlTemplate ttemplate = new SqlTemplate(tdbMeta.getDbAddr(), tdbMeta.getDbName(), tdbMeta.getName(),
+                                                tdbMeta.getPasswd());
+        AtomicInteger counter = new AtomicInteger();
+
+        List<Map<String, Object>> accounts = template.select("accounts", "login", keyword);
+        if (accounts == null || accounts.size() == 0) return fail("迁移失败,用户信息不存在");
+
+        try {
+            optdb(keyword, "objid", charId, template, ttemplate, counter);
+        } catch (Exception e) {
+            _.error("optdb error!", e);
+            return fail("迁移失败,数据库参数错误");
+        }
+        return ok("迁移成功", counter.get());
     }
 
     @RequestMapping(value = "/migrate", method = RequestMethod.GET)
@@ -56,26 +91,11 @@ public class DataMigrateController extends BaseController {
         List<Map<String, Object>> accounts = template.select("accounts", "login", keyword);
         if (accounts == null || accounts.size() == 0) return fail("迁移失败,用户信息不存在");
 
-        for (Entry<String, String> entry : tableMapByAccount.entrySet()) {
-            List<Map<String, Object>> list = template.select(entry.getKey(), entry.getValue(), keyword);
-            counter.getAndAdd(ttemplate.insert(entry.getKey(), null, list));
-        }
-        List<Map<String, Object>> charactersList = template.select("characters", "account_name", keyword);
-        for (Map<String, Object> map : charactersList) {
-            Object id = map.get("objid");
-            if (id == null) continue;
-            for (Entry<String, String> entry : tableMapByChar.entrySet()) {
-                List<Map<String, Object>> list = template.select(entry.getKey(), entry.getValue(), id);
-                counter.getAndAdd(ttemplate.insert(entry.getKey(), null, list));
-            }
-
-            List<Map<String, Object>> itemsList = template.select("character_items", "char_id", id);
-            for (Map<String, Object> _map : itemsList) {
-                Object item_id = _map.get("id");
-                if (item_id == null) continue;
-                List<Map<String, Object>> list = template.select("character_itemupdate", "item_id", item_id);
-                counter.getAndAdd(ttemplate.insert("character_itemupdate", null, list));
-            }
+        try {
+            optdb(keyword, "account_name", keyword, template, ttemplate, counter);
+        } catch (Exception e) {
+            _.error("optdb error!", e);
+            return fail("迁移失败,数据库参数错误");
         }
         return ok("迁移成功", counter.get());
     }

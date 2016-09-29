@@ -57,6 +57,9 @@ public class DataQueryController extends BaseController {
         }
 
         List<Map<String, Object>> charactersList = template.select("characters", "account_name", keyword);
+        dataMap.put("characters", charactersList);
+        dataMap.put("characters_th", allColumns(charactersList));
+
         for (Map<String, Object> map : charactersList) {
             Object id = map.get("objid");
             if (id == null) continue;

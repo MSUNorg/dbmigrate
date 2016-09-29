@@ -7,6 +7,8 @@ import static com.msun.dbmigrate.support.utils.SqlTemplate.map;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,10 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.lamfire.json.JSON;
 import com.lamfire.pandora.FireMap;
 import com.lamfire.utils.Lists;
+import com.lamfire.utils.Maps;
 import com.msun.dbmigrate.cons.Definition;
 import com.msun.dbmigrate.support.JsonResult;
 import com.msun.dbmigrate.support.utils.DbMeta;
 import com.msun.dbmigrate.support.utils.PandoraDataStore;
+import com.msun.dbmigrate.support.utils.SqlTemplate;
 
 /**
  * @author zxc Aug 8, 2016 5:00:13 PM
@@ -34,7 +38,7 @@ public class BaseController implements Definition {
     protected HttpSession          session;
 
     static Map<String, String>     tableMapByAccount = map(new String[][] { { "accounts", "login" },
-            { "profile", "login" }, { "characters", "account_name" }, { "character_elf_warehouse", "account_name" },
+            { "profile", "login" }, { "character_elf_warehouse", "account_name" },
             { "character_shop_restrict", "account_name" }, { "character_vip_time", "account" },
             { "character_warehouse", "account_name" }, { "character_shop_consumption", "account_name" } });
     static Map<String, String>     tableMapByChar    = map(new String[][] { { "character_items", "char_id" },
@@ -60,6 +64,46 @@ public class BaseController implements Definition {
         FireMap dao = pandora.getMap(DBCONF);
         if (dao.get(id) != null) return JSON.toJavaObject(JSON.fromBytes(dao.get(id)), DbMeta.class);
         return null;
+    }
+
+    public void optdb(String keyword, String where, Object value, SqlTemplate template, SqlTemplate ttemplate,
+                      AtomicInteger counter) {
+        for (Entry<String, String> entry : tableMapByAccount.entrySet()) {
+            List<Map<String, Object>> list = template.select(entry.getKey(), entry.getValue(), keyword);
+            counter.getAndAdd(ttemplate.insert(entry.getKey(), list));
+        }
+
+        Map<Object, Object> objMap = Maps.newHashMap();
+        List<Map<String, Object>> charactersList = template.select("characters", where, value);
+        for (Map<String, Object> map : charactersList) {
+            Object id = map.get("objid");
+            Object tid = ttemplate.maxId("characters", "objid");
+            objMap.put(id, tid);
+            map.put("objid", tid);
+        }
+        counter.getAndAdd(ttemplate.insert("characters", charactersList));
+
+        for (Map<String, Object> map : charactersList) {
+            Object id = map.get("objid");
+            if (id == null) continue;
+            Object targetid = objMap.get(id);
+            if (targetid == null) continue;
+            for (Entry<String, String> entry : tableMapByChar.entrySet()) {
+                List<Map<String, Object>> list = template.select(entry.getKey(), entry.getValue(), id);
+                for (Map<String, Object> _map : list) {
+                    _map.put(entry.getValue(), targetid);
+                }
+                counter.getAndAdd(ttemplate.insert(entry.getKey(), list));
+            }
+
+            List<Map<String, Object>> itemsList = template.select("character_items", "char_id", id);
+            for (Map<String, Object> _map : itemsList) {
+                Object item_id = _map.get("id");
+                if (item_id == null) continue;
+                List<Map<String, Object>> list = template.select("character_itemupdate", "item_id", item_id);
+                counter.getAndAdd(ttemplate.insert("character_itemupdate", list));
+            }
+        }
     }
 
     public JsonResult ok(String msg) {

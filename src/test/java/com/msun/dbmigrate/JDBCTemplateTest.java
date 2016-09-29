@@ -55,7 +55,7 @@ public class JDBCTemplateTest {
         String key = "11aa22";
         for (Entry<String, String> entry : tableMap.entrySet()) {
             List<Map<String, Object>> list = template.select(entry.getKey(), entry.getValue(), key);
-            template2.insert(entry.getKey(), null, list);
+            template2.insert(entry.getKey(), list);
         }
 
         // characters objid
@@ -74,14 +74,14 @@ public class JDBCTemplateTest {
                 { "character_shop_warehouse", "char_id" } });
         for (Entry<String, String> entry : tableMap.entrySet()) {
             List<Map<String, Object>> list = template.select(entry.getKey(), entry.getValue(), id);
-            template2.insert(entry.getKey(), null, list);
+            template2.insert(entry.getKey(), list);
         }
 
         List<Map<String, Object>> itemsList = template.select("character_items", "char_id", id);
         for (Map<String, Object> map : itemsList) {
             Object item_id = map.get("id");
             List<Map<String, Object>> list = template.select("character_itemupdate", "item_id", item_id);
-            template2.insert("character_itemupdate", null, list);
+            template2.insert("character_itemupdate", list);
         }
     }
 }
