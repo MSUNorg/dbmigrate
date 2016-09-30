@@ -78,7 +78,9 @@ public class BaseController implements Definition {
         for (Entry<String, String> entry : tableMapByAccount2.entrySet()) {
             List<Map<String, Object>> list = template.select(entry.getKey(), entry.getValue(), keyword);
             for (Map<String, Object> map_ : list) {
-                map_.put("id", ttemplate.maxId(entry.getKey(), "id"));
+                if (StringUtils.equalsIgnoreCase("id", entry.getValue())) {
+                    map_.put("id", ttemplate.maxId(entry.getKey(), "id"));
+                }
                 counter.getAndAdd(ttemplate.insert(entry.getKey(), map_));
             }
         }
