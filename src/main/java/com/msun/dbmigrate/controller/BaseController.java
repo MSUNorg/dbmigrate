@@ -31,18 +31,24 @@ import com.msun.dbmigrate.support.utils.SqlTemplate;
  */
 public class BaseController implements Definition {
 
-    public static PandoraDataStore pandora           = PandoraDataStore.getInstance();
+    public static PandoraDataStore pandora            = PandoraDataStore.getInstance();
 
     @Autowired
     protected HttpServletRequest   request;
     @Autowired
     protected HttpSession          session;
 
-    static Map<String, String>     tableMapByAccount = map(new String[][] { { "accounts", "login" },
+    static Map<String, String>     tableMapByAccount  = map(new String[][] { { "accounts", "login" },
             { "profile", "login" }, { "character_elf_warehouse", "account_name" },
             { "character_shop_restrict", "account_name" }, { "character_vip_time", "account" },
             { "character_warehouse", "account_name" }, { "character_shop_consumption", "account_name" } });
-    static Map<String, String>     tableMapByChar    = map(new String[][] { { "character_config", "object_id" },
+
+    static Map<String, String>     tableMapByAccount2 = map(new String[][] { { "accounts", "login" },
+            { "profile", "login" }, { "character_elf_warehouse", "account_name" },
+            { "character_shop_restrict", "account_name" }, { "character_vip_time", "account" },
+            { "character_shop_consumption", "account_name" } });
+
+    static Map<String, String>     tableMapByChar     = map(new String[][] { { "character_config", "object_id" },
             { "character_maptime", "char_id" }, { "character_passivespells", "char_obj_id" },
             { "character_quests", "char_id" }, { "character_skills", "char_obj_id" },
             { "character_teleport", "char_id" }, { "pets", "item_obj_id" }, { "character_shop_warehouse", "char_id" } });
@@ -69,9 +75,12 @@ public class BaseController implements Definition {
     @SuppressWarnings("unchecked")
     public void optdb(String keyword, String where, Object value, SqlTemplate template, SqlTemplate ttemplate,
                       AtomicInteger counter) {
-        for (Entry<String, String> entry : tableMapByAccount.entrySet()) {
+        for (Entry<String, String> entry : tableMapByAccount2.entrySet()) {
             List<Map<String, Object>> list = template.select(entry.getKey(), entry.getValue(), keyword);
-            counter.getAndAdd(ttemplate.insert(entry.getKey(), list));
+            for (Map<String, Object> map_ : list) {
+                map_.put("id", ttemplate.maxId(entry.getKey(), "id"));
+                counter.getAndAdd(ttemplate.insert(entry.getKey(), map_));
+            }
         }
 
         Map<Object, Object> objMap = Maps.newHashMap();
@@ -103,7 +112,9 @@ public class BaseController implements Definition {
             Map<Object, Object> itemMap = Maps.newHashMap();
             List<Map<String, Object>> itemsList = template.select("character_items", "char_id", id);
             for (Map<String, Object> _map : itemsList) {
-                Object maxId = ttemplate.maxId("character_items", "id");
+                Long id1 = ttemplate.maxId("character_items", "id");
+                Long id2 = ttemplate.maxId("character_warehouse", "id");
+                Object maxId = (id1 > id2) ? id1 : id2;
                 itemMap.put(maxId, _map.get("id"));
                 _map.put("char_id", targetid);
                 _map.put("id", maxId);
@@ -121,6 +132,15 @@ public class BaseController implements Definition {
                     counter.getAndAdd(ttemplate.insert("character_itemupdate", map_));
                 }
             }
+        }
+
+        // character_warehouse特殊处理
+        List<Map<String, Object>> list = template.select("character_warehouse", "account_name", keyword);
+        for (Map<String, Object> map_ : list) {
+            Long id1 = ttemplate.maxId("character_items", "id");
+            Long id2 = ttemplate.maxId("character_warehouse", "id");
+            map_.put("id", (id1 > id2) ? id1 : id2);
+            counter.getAndAdd(ttemplate.insert("character_warehouse", map_));
         }
     }
 
