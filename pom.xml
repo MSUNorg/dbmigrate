@@ -287,6 +287,7 @@
                             </resources>
                         </configuration>
                     </execution>
+                    <!-- 启动命令打到/target/目录下 -->
                     <execution>
                         <id>copy-command</id>
                         <phase>package</phase>
