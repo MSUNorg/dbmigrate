@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.lamfire.json.JSON;
@@ -41,11 +42,10 @@ public class BaseController implements Definition {
             { "profile", "login" }, { "character_elf_warehouse", "account_name" },
             { "character_shop_restrict", "account_name" }, { "character_vip_time", "account" },
             { "character_warehouse", "account_name" }, { "character_shop_consumption", "account_name" } });
-    static Map<String, String>     tableMapByChar    = map(new String[][] { { "character_items", "char_id" },
-            { "character_config", "object_id" }, { "character_maptime", "char_id" },
-            { "character_passivespells", "char_obj_id" }, { "character_quests", "char_id" },
-            { "character_skills", "char_obj_id" }, { "character_teleport", "char_id" }, { "pets", "item_obj_id" },
-            { "character_shop_warehouse", "char_id" } });
+    static Map<String, String>     tableMapByChar    = map(new String[][] { { "character_config", "object_id" },
+            { "character_maptime", "char_id" }, { "character_passivespells", "char_obj_id" },
+            { "character_quests", "char_id" }, { "character_skills", "char_obj_id" },
+            { "character_teleport", "char_id" }, { "pets", "item_obj_id" }, { "character_shop_warehouse", "char_id" } });
 
     public List<DbMeta> dbconf() {
         FireMap dao = pandora.getMap(DBCONF);
@@ -66,6 +66,7 @@ public class BaseController implements Definition {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     public void optdb(String keyword, String where, Object value, SqlTemplate template, SqlTemplate ttemplate,
                       AtomicInteger counter) {
         for (Entry<String, String> entry : tableMapByAccount.entrySet()) {
@@ -80,8 +81,8 @@ public class BaseController implements Definition {
             Object tid = ttemplate.maxId("characters", "objid");
             objMap.put(tid, id);
             map.put("objid", tid);
+            counter.getAndAdd(ttemplate.insert("characters", map));
         }
-        counter.getAndAdd(ttemplate.insert("characters", charactersList));
 
         for (Map<String, Object> map : charactersList) {
             Object targetid = map.get("objid");
@@ -92,16 +93,33 @@ public class BaseController implements Definition {
                 List<Map<String, Object>> list = template.select(entry.getKey(), entry.getValue(), id);
                 for (Map<String, Object> _map : list) {
                     _map.put(entry.getValue(), targetid);
+                    if (StringUtils.equalsIgnoreCase("id", entry.getValue())) {
+                        _map.put("id", ttemplate.maxId(entry.getKey(), "id"));
+                    }
+                    counter.getAndAdd(ttemplate.insert(entry.getKey(), _map));
                 }
-                counter.getAndAdd(ttemplate.insert(entry.getKey(), list));
             }
 
+            Map<Object, Object> itemMap = Maps.newHashMap();
             List<Map<String, Object>> itemsList = template.select("character_items", "char_id", id);
             for (Map<String, Object> _map : itemsList) {
-                Object item_id = _map.get("id");
+                Object maxId = ttemplate.maxId("character_items", "id");
+                itemMap.put(maxId, _map.get("id"));
+                _map.put("char_id", targetid);
+                _map.put("id", maxId);
+                counter.getAndAdd(ttemplate.insert("character_items", _map));
+            }
+
+            for (Map<String, Object> _map : itemsList) {
+                Object _item_id = _map.get("id");
+                if (_item_id == null) continue;
+                Object item_id = itemMap.get(_item_id);
                 if (item_id == null) continue;
                 List<Map<String, Object>> list = template.select("character_itemupdate", "item_id", item_id);
-                counter.getAndAdd(ttemplate.insert("character_itemupdate", list));
+                for (Map<String, Object> map_ : list) {
+                    map_.put("item_id", _item_id);
+                    counter.getAndAdd(ttemplate.insert("character_itemupdate", map_));
+                }
             }
         }
     }

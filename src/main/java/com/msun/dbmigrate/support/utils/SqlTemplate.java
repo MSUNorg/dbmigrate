@@ -79,6 +79,11 @@ public class SqlTemplate extends JdbcTemplate implements Definition {
         return insert(tableName, null, list);
     }
 
+    @SuppressWarnings("unchecked")
+    public int insert(String tableName, Map<String, Object>... lists) {
+        return insert(tableName, null, Lists.newArrayList(lists));
+    }
+
     public int insert(String tableName, String primaryKey, List<Map<String, Object>> list) {
         int count = 0;
         for (final Map<String, Object> map : list) {
