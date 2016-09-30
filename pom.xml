@@ -257,7 +257,7 @@
                     <excludes>
                         <exclude>**/*Test.class</exclude>
                     </excludes>
-                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                    <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/lib</outputDirectory>
                 </configuration>
             </plugin>
             <!-- 配置文件打到/target/conf目录下 -->
@@ -274,16 +274,15 @@
                         </goals>
                         <configuration>
                             <encoding>UTF-8</encoding>
-                            <outputDirectory>${project.build.directory}/conf</outputDirectory>
+                            <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/conf</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>src/main/resources/</directory>
                                     <filtering>true</filtering>
-                                    <excludes>
-                                        <include>*.properties</include>
-                                        <include>**/static/**</include>
-                        				<include>**/templates/**</include>
-                                    </excludes>
+                                    <includes>
+                                        <include>*</include>
+                                        <include>**/*</include>
+                                    </includes>
                                 </resource>
                             </resources>
                         </configuration>
@@ -296,15 +295,13 @@
                         </goals>
                         <configuration>
                             <encoding>UTF-8</encoding>
-                            <outputDirectory>${project.build.directory}/conf</outputDirectory>
+                            <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>src/main/resources/</directory>
+                                    <directory>bin/</directory>
                                     <filtering>true</filtering>
                                     <includes>
-                                        <include>*.properties</include>
-                                        <include>**/static/**</include>
-                        				<include>**/templates/**</include>
+                                        <include>*</include>
                                     </includes>
                                 </resource>
                             </resources>
@@ -317,7 +314,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <configuration>
-                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                    <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/lib</outputDirectory>
                     <excludeTransitive>false</excludeTransitive> 
                     <stripVersion>false</stripVersion> 
                 </configuration>
@@ -329,7 +326,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/lib</outputDirectory>
                             <excludeTransitive>false</excludeTransitive>
                             <stripVersion>false</stripVersion>
                             <overWriteReleases>false</overWriteReleases>
