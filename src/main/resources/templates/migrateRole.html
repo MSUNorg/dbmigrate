@@ -79,7 +79,7 @@ body {
 				<form id="searchForm" action="user" method="post">
 					<div class="page-search">
 						<div class="query-field">
-							<span>游戏玩家名称</span>
+							<span>游戏帐号</span>
 							<div style="position: absolute; left: 103px; top: 60px;">
 							<input type="text" id="keyword" name="keyword" 
 							th:value="${keyword}" class="input" required="required" maxlength="32">
@@ -127,7 +127,7 @@ body {
 			var keyword = $("#keyword").val();
 			var dbId=$("#dbconf1").val();
 			if(keyword == null || keyword == ""){
-	    		alert("游戏玩家名称不能为空");
+	    		alert("游戏帐号不能为空");
 	    		return;
 	    	}
 			if(dbId == null || dbId == ""){
@@ -142,7 +142,7 @@ body {
 			var targetId=$("#dbconf2").val();
 			var charId=$("#charId").val();
 			if(keyword == null || keyword == ""){
-	    		alert("游戏玩家名称不能为空");
+	    		alert("游戏帐号不能为空");
 	    		return;
 	    	}
 			if(dbId == null || dbId == ""){
