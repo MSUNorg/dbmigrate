@@ -78,16 +78,16 @@ public class BaseController implements Definition {
         for (Map<String, Object> map : charactersList) {
             Object id = map.get("objid");
             Object tid = ttemplate.maxId("characters", "objid");
-            objMap.put(id, tid);
+            objMap.put(tid, id);
             map.put("objid", tid);
         }
         counter.getAndAdd(ttemplate.insert("characters", charactersList));
 
         for (Map<String, Object> map : charactersList) {
-            Object id = map.get("objid");
-            if (id == null) continue;
-            Object targetid = objMap.get(id);
+            Object targetid = map.get("objid");
             if (targetid == null) continue;
+            Object id = objMap.get(targetid);
+            if (id == null) continue;
             for (Entry<String, String> entry : tableMapByChar.entrySet()) {
                 List<Map<String, Object>> list = template.select(entry.getKey(), entry.getValue(), id);
                 for (Map<String, Object> _map : list) {
