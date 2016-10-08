@@ -85,12 +85,18 @@ public class BaseController implements Definition {
                 if (StringUtils.equalsIgnoreCase("id", entry.getValue())) {
                     map_.put("id", ttemplate.maxId(entry.getKey(), "id"));
                 }
+                // delete original data,ignore accounts
+                if (!StringUtils.equalsIgnoreCase("accounts", entry.getKey())) {
+                    template.delete(entry.getKey(), entry.getValue(), keyword);
+                }
                 counter.getAndAdd(ttemplate.insert(entry.getKey(), map_));
             }
         }
 
         Map<Object, Object> objMap = Maps.newHashMap();
         List<Map<String, Object>> charactersList = template.select("characters", where, value);
+        // delete original data
+        template.delete("characters", where, value);
         for (Map<String, Object> map : charactersList) {
             Object id = map.get("objid");
             Object tid = ttemplate.maxId("characters", "objid");
@@ -111,12 +117,16 @@ public class BaseController implements Definition {
                     if (StringUtils.equalsIgnoreCase("id", entry.getValue())) {
                         _map.put("id", ttemplate.maxId(entry.getKey(), "id"));
                     }
+                    // delete original data
+                    template.delete(entry.getKey(), entry.getValue(), id);
                     counter.getAndAdd(ttemplate.insert(entry.getKey(), _map));
                 }
             }
 
             Map<Object, Object> itemMap = Maps.newHashMap();
             List<Map<String, Object>> itemsList = template.select("character_items", "char_id", id);
+            // delete original data
+            template.delete("character_items", "char_id", id);
             for (Map<String, Object> _map : itemsList) {
                 Long id1 = ttemplate.maxId("character_items", "id");
                 Long id2 = ttemplate.maxId("character_warehouse", "id");
@@ -133,6 +143,8 @@ public class BaseController implements Definition {
                 Object item_id = itemMap.get(_item_id);
                 if (item_id == null) continue;
                 List<Map<String, Object>> list = template.select("character_itemupdate", "item_id", item_id);
+                // delete original data
+                template.delete("character_itemupdate", "item_id", item_id);
                 for (Map<String, Object> map_ : list) {
                     map_.put("item_id", _item_id);
                     counter.getAndAdd(ttemplate.insert("character_itemupdate", map_));
@@ -142,6 +154,8 @@ public class BaseController implements Definition {
 
         // character_warehouse特殊处理
         List<Map<String, Object>> list = template.select("character_warehouse", "account_name", keyword);
+        // delete original data
+        template.delete("character_warehouse", "account_name", keyword);
         for (Map<String, Object> map_ : list) {
             Long id1 = ttemplate.maxId("character_items", "id");
             Long id2 = ttemplate.maxId("character_warehouse", "id");

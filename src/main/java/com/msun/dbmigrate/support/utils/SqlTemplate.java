@@ -45,7 +45,7 @@ public class SqlTemplate extends JdbcTemplate implements Definition {
     public String primaryKey(String tableName) {
         try {
             List<Map<String, Object>> list = queryForList("select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = ? and TABLE_SCHEMA=?",
-                                                  tableName, dbName);
+                                                          tableName, dbName);
             if (list == null || list.size() == 0) return "";
             return (String) list.get(0).get("COLUMN_NAME");
         } catch (Exception e) {
@@ -61,6 +61,15 @@ public class SqlTemplate extends JdbcTemplate implements Definition {
         } catch (Exception e) {
             _.error("template maxId error!tableName=" + tableName, e);
             return Long.MAX_VALUE;
+        }
+    }
+
+    public int delete(String tableName, String primaryKey, Object value) {
+        try {
+            return update("delete from " + tableName + " where " + primaryKey + "='" + value + "'");
+        } catch (Exception e) {
+            _.error("template delete error!tableName=" + tableName, e);
+            return Integer.MAX_VALUE;
         }
     }
 
