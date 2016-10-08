@@ -39,8 +39,7 @@ public class DataQueryController extends BaseController {
         DbMeta dbMeta = dbconf(dbId);
         if (dbMeta == null) return mv;
 
-        SqlTemplate template = new SqlTemplate(dbMeta.getDbAddr(), dbMeta.getDbName(), dbMeta.getName(),
-                                               dbMeta.getPasswd());
+        SqlTemplate template = genTemplate(dbMeta);
         List<Map<String, Object>> tableList = template.queryForList("show tables");
         List<Object> tables = Lists.newLinkedList();
         for (Map<String, Object> map : tableList) {

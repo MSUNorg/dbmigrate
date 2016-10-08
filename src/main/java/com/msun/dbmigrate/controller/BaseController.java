@@ -72,6 +72,10 @@ public class BaseController implements Definition {
         return null;
     }
 
+    public SqlTemplate genTemplate(DbMeta dbMeta) {
+        return new SqlTemplate(dbMeta.getDbAddr(), dbMeta.getDbName(), dbMeta.getName(), dbMeta.getPasswdStr());
+    }
+
     @SuppressWarnings("unchecked")
     public void optdb(String keyword, String where, Object value, SqlTemplate template, SqlTemplate ttemplate,
                       AtomicInteger counter) {

@@ -3,7 +3,9 @@
  */
 package com.msun.dbmigrate.support.utils;
 
+import com.lamfire.code.Base64;
 import com.lamfire.json.JSON;
+import com.lamfire.utils.StringUtils;
 
 /**
  * @author zxc Sep 26, 2016 12:11:43 PM
@@ -51,6 +53,15 @@ public class DbMeta {
 
     public String getPasswd() {
         return passwd;
+    }
+
+    public String getPasswdStr() {
+        try {
+            return StringUtils.isEmpty(passwd) ? "" : Encrypt.AESdecode(Encrypt.aeskey, Base64.decode(passwd));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     public void setPasswd(String passwd) {

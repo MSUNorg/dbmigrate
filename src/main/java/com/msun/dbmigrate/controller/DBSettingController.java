@@ -13,6 +13,7 @@ import com.lamfire.json.JSON;
 import com.lamfire.pandora.FireMap;
 import com.msun.dbmigrate.support.JsonResult;
 import com.msun.dbmigrate.support.utils.DbMeta;
+import com.msun.dbmigrate.support.utils.Encrypt;
 import com.msun.dbmigrate.support.utils.SqlTemplate;
 
 /**
@@ -49,7 +50,7 @@ public class DBSettingController extends BaseController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult save(DbMeta dbMeta) {
+    public JsonResult save(DbMeta dbMeta) throws Exception {
         if (dbMeta == null) return fail("参数错误");
         String dbAddr = StringUtils.trim(dbMeta.getDbAddr());
         String dbName = StringUtils.trim(dbMeta.getDbName());
@@ -68,6 +69,7 @@ public class DBSettingController extends BaseController {
         dbMeta.setDbAddr(dbAddr);
         dbMeta.setDbName(dbName);
         dbMeta.setName(name);
+        passwd = Encrypt.AESencodeStr(Encrypt.aeskey, passwd.getBytes());
         dbMeta.setPasswd(passwd);
         dbMeta.setCreateAt(System.currentTimeMillis());
         dao.put(id, JSON.toJSONString(dbMeta).getBytes());

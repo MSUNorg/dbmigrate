@@ -31,8 +31,7 @@ public class DataMigrateController extends BaseController {
         List<Map<String, Object>> charactersList = null;
         if (StringUtils.isNotEmpty(keyword) && StringUtils.isNotEmpty(dbId)) {
             DbMeta dbMeta = dbconf(dbId);
-            SqlTemplate template = new SqlTemplate(dbMeta.getDbAddr(), dbMeta.getDbName(), dbMeta.getName(),
-                                                   dbMeta.getPasswd());
+            SqlTemplate template = genTemplate(dbMeta);
             charactersList = template.select("characters", "account_name", keyword);
         }
         return new ModelAndView("migrateRole")//
@@ -50,10 +49,8 @@ public class DataMigrateController extends BaseController {
         DbMeta tdbMeta = dbconf(targetId);
         if (dbMeta == null || tdbMeta == null) return fail("迁移失败,数据库参数错误");
 
-        SqlTemplate template = new SqlTemplate(dbMeta.getDbAddr(), dbMeta.getDbName(), dbMeta.getName(),
-                                               dbMeta.getPasswd());
-        SqlTemplate ttemplate = new SqlTemplate(tdbMeta.getDbAddr(), tdbMeta.getDbName(), tdbMeta.getName(),
-                                                tdbMeta.getPasswd());
+        SqlTemplate template = genTemplate(dbMeta);
+        SqlTemplate ttemplate = genTemplate(tdbMeta);
         AtomicInteger counter = new AtomicInteger();
 
         List<Map<String, Object>> accounts = template.select("accounts", "login", keyword);
@@ -82,10 +79,8 @@ public class DataMigrateController extends BaseController {
         DbMeta tdbMeta = dbconf(targetId);
         if (dbMeta == null || tdbMeta == null) return fail("迁移失败,数据库参数错误");
 
-        SqlTemplate template = new SqlTemplate(dbMeta.getDbAddr(), dbMeta.getDbName(), dbMeta.getName(),
-                                               dbMeta.getPasswd());
-        SqlTemplate ttemplate = new SqlTemplate(tdbMeta.getDbAddr(), tdbMeta.getDbName(), tdbMeta.getName(),
-                                                tdbMeta.getPasswd());
+        SqlTemplate template = genTemplate(dbMeta);
+        SqlTemplate ttemplate = genTemplate(tdbMeta);
         AtomicInteger counter = new AtomicInteger();
 
         List<Map<String, Object>> accounts = template.select("accounts", "login", keyword);
