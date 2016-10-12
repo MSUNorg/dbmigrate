@@ -105,6 +105,7 @@ public class BaseController implements Definition {
             counter.getAndAdd(ttemplate.insert("characters", map));
         }
 
+        int items_size = 0;
         for (Map<String, Object> map : charactersList) {
             Object targetid = map.get("objid");
             if (targetid == null) continue;
@@ -125,6 +126,7 @@ public class BaseController implements Definition {
 
             Map<Object, Object> itemMap = Maps.newHashMap();
             List<Map<String, Object>> itemsList = template.select("character_items", "char_id", id);
+            items_size += itemsList.size();
             // delete original data
             template.delete("character_items", "char_id", id);
             for (Map<String, Object> _map : itemsList) {
@@ -154,12 +156,15 @@ public class BaseController implements Definition {
 
         // character_warehouse特殊处理
         List<Map<String, Object>> list = template.select("character_warehouse", "account_name", keyword);
+        int warehouse_size = list.size();
         // delete original data
         template.delete("character_warehouse", "account_name", keyword);
         for (Map<String, Object> map_ : list) {
             Long id1 = ttemplate.maxId("character_items", "id");
             Long id2 = ttemplate.maxId("character_warehouse", "id");
-            map_.put("id", (id1 > id2) ? id1 : id2);
+            // character_items和character_warehouse +2
+            long id = ((id1 > id2) ? id1 : id2) + items_size + warehouse_size + 2;
+            map_.put("id", id);
             counter.getAndAdd(ttemplate.insert("character_warehouse", map_));
         }
     }
