@@ -42,6 +42,15 @@ public class SqlTemplate extends JdbcTemplate implements Definition {
         }
     }
 
+    public int autoIncrement(String tableName, Object value) {
+        try {
+            return update("ALTER TABLE " + tableName + "  AUTO_INCREMENT" + "=" + value + "");
+        } catch (Exception e) {
+            _.error("autoIncrement error!tableName=" + tableName, e);
+            return Integer.MAX_VALUE;
+        }
+    }
+
     public String primaryKey(String tableName) {
         try {
             List<Map<String, Object>> list = queryForList("select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = ? and TABLE_SCHEMA=?",

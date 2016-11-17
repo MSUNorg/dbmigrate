@@ -78,8 +78,9 @@ public class BaseController implements Definition {
 
     @SuppressWarnings("unchecked")
     public void optdb(String keyword, String where, Object value, SqlTemplate template, SqlTemplate ttemplate,
-                      AtomicInteger counter) {
+                      AtomicInteger counter, boolean optWarehouse) {
         for (Entry<String, String> entry : tableMapByAccount2.entrySet()) {
+            if (!optWarehouse && StringUtils.endsWithIgnoreCase(entry.getKey(), "character_elf_warehouse")) continue;
             List<Map<String, Object>> list = template.select(entry.getKey(), entry.getValue(), keyword);
             for (Map<String, Object> map_ : list) {
                 if (StringUtils.equalsIgnoreCase("id", entry.getValue())) {
@@ -154,18 +155,22 @@ public class BaseController implements Definition {
             }
         }
 
-        // character_warehouse特殊处理
-        List<Map<String, Object>> list = template.select("character_warehouse", "account_name", keyword);
-        int warehouse_size = list.size();
-        // delete original data
-        template.delete("character_warehouse", "account_name", keyword);
-        for (Map<String, Object> map_ : list) {
-            Long id1 = ttemplate.maxId("character_items", "id");
-            Long id2 = ttemplate.maxId("character_warehouse", "id");
-            // character_items和character_warehouse +2
-            long id = ((id1 > id2) ? id1 : id2) + items_size + warehouse_size + 2;
-            map_.put("id", id);
-            counter.getAndAdd(ttemplate.insert("character_warehouse", map_));
+        if (optWarehouse) {
+            // character_warehouse特殊处理
+            List<Map<String, Object>> list = template.select("character_warehouse", "account_name", keyword);
+            int warehouse_size = list.size();
+            // delete original data
+            template.delete("character_warehouse", "account_name", keyword);
+            Long id = 0l;
+            for (Map<String, Object> map_ : list) {
+                Long id1 = ttemplate.maxId("character_items", "id");
+                Long id2 = ttemplate.maxId("character_warehouse", "id");
+                // character_items和character_warehouse +2
+                id = ((id1 > id2) ? id1 : id2) + items_size + warehouse_size + 2;
+                map_.put("id", id);
+                counter.getAndAdd(ttemplate.insert("character_warehouse", map_));
+            }
+            ttemplate.autoIncrement("accounts", id + 2);
         }
     }
 

@@ -43,7 +43,7 @@ public class DataMigrateController extends BaseController {
 
     @RequestMapping(value = "/migrateRole", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult domigrateRole(String keyword, Long charId, String dbId, String targetId) {
+    public JsonResult domigrateRole(String keyword, Long charId, String dbId, String targetId, Integer warehouse) {
         if (StringUtils.isEmpty(keyword) || StringUtils.isEmpty(dbId)) return fail("迁移失败,参数错误");
         DbMeta dbMeta = dbconf(dbId);
         DbMeta tdbMeta = dbconf(targetId);
@@ -57,7 +57,7 @@ public class DataMigrateController extends BaseController {
         if (accounts == null || accounts.size() == 0) return fail("迁移失败,用户信息不存在");
 
         try {
-            optdb(keyword, "objid", charId, template, ttemplate, counter);
+            optdb(keyword, "objid", charId, template, ttemplate, counter, warehouse.intValue() == 1);
         } catch (Exception e) {
             _.error("optdb error!", e);
             return fail("迁移失败,数据库参数错误");
@@ -87,7 +87,7 @@ public class DataMigrateController extends BaseController {
         if (accounts == null || accounts.size() == 0) return fail("迁移失败,用户信息不存在");
 
         try {
-            optdb(keyword, "account_name", keyword, template, ttemplate, counter);
+            optdb(keyword, "account_name", keyword, template, ttemplate, counter, true);
         } catch (Exception e) {
             _.error("optdb error!", e);
             return fail("迁移失败,数据库参数错误");
