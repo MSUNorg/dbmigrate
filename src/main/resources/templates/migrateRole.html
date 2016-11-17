@@ -95,7 +95,7 @@ body {
 							class="btn btn-primary">查询角色</a>
 						</div>
 						<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;
-						<div >
+						<div th:if="${charactersList != null && charactersList.size() > 0}">
 							<span style="position: absolute; top: 130px;">玩家角色</span>
 							<div style="position: absolute; left: 103px; top: 130px;">
 								<select id="charId" name="charId" class="select form-select entryTemplateId-select">
