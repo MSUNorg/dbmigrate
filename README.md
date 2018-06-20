@@ -11,7 +11,7 @@ mysql 数据迁移工具
 ### 打包
 `mvn clean package -DskipTests`
 
-###打包后目录结构`tree`命令查看
+### 打包后目录结构`tree`命令查看
 ```
 └── target
     └── dbmigrate-1.0.0-SNAPSHOT
